@@ -37,6 +37,8 @@ class DartTypeWrap {
 
   String get libraryName => _wrapped.element.library.name;
 
+  bool isAssignableTo(DartTypeWrap type) => _wrapped.isAssignableTo(type._wrapped);
+
   bool isType(DartTypeWrap other) {
     if (libraryName != other.libraryName) {
       return false;
