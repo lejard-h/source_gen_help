@@ -12,6 +12,8 @@ class AnnotationElementWrap {
   String get libraryName => constantValue.type.element.library.displayName;
 
   String get displayName => constantValue.type.displayName;
+  
+  Element get element => _wrapped.element;
 
   String get instantiationString {
     String lRet = (_wrapped as ElementAnnotationImpl).annotationAst.toSource();
