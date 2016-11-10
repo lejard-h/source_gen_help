@@ -83,4 +83,3 @@ class MethodElementWrap {
   DartTypeWrap get returnTypeWithoutFuture =>
       new DartTypeWrap(returnType.flattenFutures(_wrapped.context.typeSystem));
 }
-

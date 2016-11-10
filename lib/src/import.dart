@@ -13,6 +13,7 @@ part 'dart_type.dart';
 part 'parameter_element.dart';
 part 'annotation_element.dart';
 part 'class_element.dart';
+part 'interface_type_element.dart';
 
 /// An element that has a name and library
 abstract class NamedElement {

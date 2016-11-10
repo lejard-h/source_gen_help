@@ -1,24 +1,5 @@
 part of jaguar.generator.internal.element;
 
-class InterfaceTypeWrap implements NamedElement {
-  final InterfaceType _wrapped;
-
-  InterfaceTypeWrap(this._wrapped);
-
-  String get name => _wrapped.name;
-
-  String get libraryName => _wrapped.element.library.name;
-
-  bool isSame(NamedElement el) {
-    return name == el.name && libraryName == el.libraryName;
-  }
-
-  List<DartTypeWrap> get typeArguments =>
-      _wrapped.typeArguments.map((arg) => new DartTypeWrap(arg)).toList();
-
-  List<TypeParameterElement> get typeParameters => _wrapped.typeParameters;
-}
-
 class ClassElementWrap implements NamedElement {
   final ClassElement _wrapped;
 
@@ -28,7 +9,9 @@ class ClassElementWrap implements NamedElement {
 
   String get libraryName => _wrapped.library.name;
 
-  List<InterfaceType> get allSupertypes => _wrapped.allSupertypes;
+  List<InterfaceTypeWrap> get allSupertypes => _wrapped.allSupertypes
+      .map((InterfaceType iface) => new InterfaceTypeWrap(iface))
+      .toList();
 
   bool isSameAs(ClassElementWrap other) {
     return name == other.name && libraryName == other.libraryName;
@@ -44,4 +27,24 @@ class ClassElementWrap implements NamedElement {
       _wrapped.metadata.map((annot) => new AnnotationElementWrap(annot));
 
   List<TypeParameterElement> get typeParameters => _wrapped.typeParameters;
+
+  bool isSubtypeOf(NamedElement named) {
+    for (InterfaceTypeWrap interface in allSupertypes) {
+      if (interface.isSame(named)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  InterfaceTypeWrap getSubtypeOf(NamedElement named) {
+    for (InterfaceTypeWrap interface in allSupertypes) {
+      if (interface.isSame(named)) {
+        return interface;
+      }
+    }
+
+    return null;
+  }
 }
