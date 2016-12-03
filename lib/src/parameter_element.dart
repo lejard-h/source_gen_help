@@ -8,6 +8,8 @@ class ParameterElementWrap {
     _type = new DartTypeWrap(_wrapped.type);
   }
 
+  ParameterKind get parameterKind => _wrapped.parameterKind;
+
   DartTypeWrap _type;
 
   DartTypeWrap get type => _type;
@@ -37,4 +39,6 @@ class ParameterElementWrap {
   }
 
   String get name => _wrapped.name;
+
+  String get sourceValue => _wrapped.toString();
 }

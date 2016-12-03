@@ -1,6 +1,6 @@
 part of jaguar.generator.internal.element;
 
-class InterfaceTypeWrap implements NamedElement {
+class InterfaceTypeWrap extends Object with NamedElement {
   final InterfaceType _wrapped;
 
   InterfaceTypeWrap(this._wrapped);
@@ -8,10 +8,6 @@ class InterfaceTypeWrap implements NamedElement {
   String get name => _wrapped.name;
 
   String get libraryName => _wrapped.element.library.name;
-
-  bool isSame(NamedElement el) {
-    return name == el.name && libraryName == el.libraryName;
-  }
 
   List<DartTypeWrap> get typeArguments =>
       _wrapped.typeArguments.map((arg) => new DartTypeWrap(arg)).toList();

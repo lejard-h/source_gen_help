@@ -1,8 +1,8 @@
 part of jaguar.generator.internal.element;
 
-class MethodElementWrap {
+class MethodElementWrap implements WithMetadata {
   MethodElementWrap(this._wrapped) {
-    for (ParameterElement param in parameters) {
+    for (ParameterElementWrap param in parameters) {
       if (param.parameterKind.isOptional) {
         _optionalParams.add(param);
 
@@ -18,11 +18,12 @@ class MethodElementWrap {
 
   bool get isStatic => _wrapped.isStatic;
 
-  List<ElementAnnotation> get metadata => _wrapped.metadata;
+  List<AnnotationElementWrap> get metadata =>
+      _wrapped.metadata.map((el) => new AnnotationElementWrap(el)).toList();
 
-  List<ParameterElement> _requiredParams = <ParameterElement>[];
+  final List<ParameterElementWrap> _requiredParams = <ParameterElementWrap>[];
 
-  List<ParameterElement> _optionalParams = <ParameterElement>[];
+  final List<ParameterElementWrap> _optionalParams = <ParameterElementWrap>[];
 
   bool _areOptionalParamsPositional = false;
 
@@ -33,7 +34,7 @@ class MethodElementWrap {
 
     if (_requiredParams.length != 0) {
       String paramsStr = _requiredParams
-          .map((ParameterElement pel) => pel.toString())
+          .map((ParameterElementWrap pel) => pel.sourceValue)
           .join(",");
 
       sb.write(paramsStr);
@@ -50,8 +51,8 @@ class MethodElementWrap {
         sb.write('{');
       }
 
-      String paramsStr = _optionalParams.map((ParameterElement pel) {
-        final str = pel.toString();
+      String paramsStr = _optionalParams.map((ParameterElementWrap pel) {
+        final str = pel.sourceValue;
         return str.substring(1, str.length - 1);
       }).join(",");
 
@@ -70,16 +71,25 @@ class MethodElementWrap {
 
   String get name => _wrapped.name;
 
-  List<ParameterElement> get parameters => _wrapped.parameters;
+  List<ParameterElementWrap> get parameters => _wrapped.parameters
+      .map((param) => new ParameterElementWrap(param))
+      .toList();
 
-  List<ParameterElement> get requiredParameters => _requiredParams;
+  List<ParameterElementWrap> get requiredParameters => _requiredParams;
 
-  List<ParameterElement> get optionalParameters => _optionalParams;
+  List<ParameterElementWrap> get optionalParameters => _optionalParams;
 
   bool get areOptionalParamsPositional => _areOptionalParamsPositional;
 
-  DartType get returnType => _wrapped.returnType;
+  DartTypeWrap get returnType => new DartTypeWrap(_wrapped.returnType);
 
-  DartTypeWrap get returnTypeWithoutFuture =>
-      new DartTypeWrap(returnType.flattenFutures(_wrapped.context.typeSystem));
+  DartTypeWrap get returnTypeWithoutFuture => returnType.flattenFuture;
+}
+
+abstract class MethodReturnTypeMixin {
+  MethodElementWrap get method;
+
+  DartTypeWrap get returnType => method.returnType;
+
+  DartTypeWrap get returnsFutureFlattened => method.returnTypeWithoutFuture;
 }
