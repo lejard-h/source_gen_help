@@ -52,6 +52,8 @@ class DartTypeWrap extends Object with NamedElement {
     return true;
   }
 
+  bool isSubTypeOfNamedElement(NamedElement type) => clazz.isSubtypeOf(type);
+
   String toString() => _wrapped.toString();
 
   ClassElementWrap get clazz => new ClassElementWrap(_wrapped.element);

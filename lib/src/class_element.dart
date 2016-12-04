@@ -35,15 +35,8 @@ class ClassElementWrap extends Object
 
   List<TypeParameterElement> get typeParameters => _wrapped.typeParameters;
 
-  bool isSubtypeOf(NamedElement named) {
-    for (InterfaceTypeWrap interface in allSupertypes) {
-      if (interface.compareNamedElement(named)) {
-        return true;
-      }
-    }
-
-    return false;
-  }
+  bool isSubtypeOf(NamedElement type) => allSupertypes
+      .any((InterfaceTypeWrap inter) => inter.compareNamedElement(type));
 
   InterfaceTypeWrap getSubtypeOf(NamedElement named) {
     for (InterfaceTypeWrap interface in allSupertypes) {
@@ -60,4 +53,12 @@ class ClassElementWrap extends Object
 
   ConstructorElementWrap get unnamedConstructor =>
       new ConstructorElementWrap(_wrapped.unnamedConstructor);
+
+  ConstructorElementWrap getNamedConstructors(String name) {
+    ConstructorElement el = _wrapped.getNamedConstructor(name);
+    if (el == null) {
+      return null;
+    }
+    return new ConstructorElementWrap(el);
+  }
 }
