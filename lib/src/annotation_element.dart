@@ -1,7 +1,7 @@
 part of jaguar.generator.internal.element;
 
-class AnnotationElementWrap {
-  final ElementAnnotation _wrapped;
+class AnnotationElementWrap extends NamedElement {
+  final ElementAnnotationImpl _wrapped;
 
   AnnotationElementWrap(this._wrapped) {
     _wrapped.computeConstantValue();
@@ -11,12 +11,12 @@ class AnnotationElementWrap {
 
   String get libraryName => constantValue.type.element.library.displayName;
 
-  String get displayName => constantValue.type.displayName;
+  String get name => constantValue.type.displayName;
 
   Element get element => _wrapped.element;
 
   String get instantiationString {
-    String lRet = (_wrapped as ElementAnnotationImpl).annotationAst.toSource();
+    String lRet = _wrapped.annotationAst.toSource();
     lRet = lRet.substring(1);
     return lRet;
   }
@@ -28,5 +28,18 @@ class AnnotationElementWrap {
     } catch (e) {
       return null;
     }
+  }
+
+  dynamic get argumentAst => _wrapped.annotationAst.arguments.arguments;
+
+  ClassElementWrap get ancestorClazz {
+    Element ret =
+        _wrapped.element.getAncestor((Element el) => el is ClassElement);
+
+    if (ret == null) {
+      return null;
+    }
+
+    return new ClassElementWrap(ret);
   }
 }

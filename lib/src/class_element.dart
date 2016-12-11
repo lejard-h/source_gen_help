@@ -1,6 +1,12 @@
 part of jaguar.generator.internal.element;
 
-class ClassElementWrap implements NamedElement {
+abstract class WithMetadata {
+  List<AnnotationElementWrap> get metadata;
+}
+
+class ClassElementWrap extends Object
+    with NamedElement
+    implements WithMetadata {
   final ClassElement _wrapped;
 
   ClassElementWrap(this._wrapped);
@@ -23,28 +29,36 @@ class ClassElementWrap implements NamedElement {
 
   List<FieldElement> get fields => _wrapped.fields;
 
-  Iterable<AnnotationElementWrap> get metadata =>
-      _wrapped.metadata.map((annot) => new AnnotationElementWrap(annot));
+  List<AnnotationElementWrap> get metadata => _wrapped.metadata
+      .map((annot) => new AnnotationElementWrap(annot))
+      .toList();
 
   List<TypeParameterElement> get typeParameters => _wrapped.typeParameters;
 
-  bool isSubtypeOf(NamedElement named) {
-    for (InterfaceTypeWrap interface in allSupertypes) {
-      if (interface.isSame(named)) {
-        return true;
-      }
-    }
-
-    return false;
-  }
+  bool isSubtypeOf(NamedElement type) => allSupertypes
+      .any((InterfaceTypeWrap inter) => inter.compareNamedElement(type));
 
   InterfaceTypeWrap getSubtypeOf(NamedElement named) {
     for (InterfaceTypeWrap interface in allSupertypes) {
-      if (interface.isSame(named)) {
+      if (interface.compareNamedElement(named)) {
         return interface;
       }
     }
 
     return null;
+  }
+
+  List<MethodElementWrap> get methods =>
+      _wrapped.methods.map((meth) => new MethodElementWrap(meth)).toList();
+
+  ConstructorElementWrap get unnamedConstructor =>
+      new ConstructorElementWrap(_wrapped.unnamedConstructor);
+
+  ConstructorElementWrap getNamedConstructors(String name) {
+    ConstructorElement el = _wrapped.getNamedConstructor(name);
+    if (el == null) {
+      return null;
+    }
+    return new ConstructorElementWrap(el);
   }
 }

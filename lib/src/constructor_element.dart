@@ -1,8 +1,8 @@
 part of jaguar.generator.internal.element;
 
-class ConstructorElementWrap {
+class ConstructorElementWrap implements WithMetadata {
   ConstructorElementWrap(this._wrapped) {
-    for (ParameterElement param in parameters) {
+    for (ParameterElementWrap param in parameters) {
       if (param.parameterKind.isOptional) {
         _optionalParams.add(param);
 
@@ -16,26 +16,28 @@ class ConstructorElementWrap {
 
   final ConstructorElement _wrapped;
 
-  List<ElementAnnotation> get metadata => _wrapped.metadata;
+  List<AnnotationElementWrap> get metadata =>
+      _wrapped.metadata.map((el) => new AnnotationElementWrap(el)).toList();
 
-  List<ParameterElement> _requiredParams = <ParameterElement>[];
+  final List<ParameterElementWrap> _requiredParams = <ParameterElementWrap>[];
 
-  List<ParameterElement> _optionalParams = <ParameterElement>[];
+  final List<ParameterElementWrap> _optionalParams = <ParameterElementWrap>[];
 
   bool _areOptionalParamsPositional = false;
 
   String get name => _wrapped.name;
 
-  List<ParameterElement> get parameters => _wrapped.parameters;
+  List<ParameterElementWrap> get parameters =>
+      _wrapped.parameters.map((el) => new ParameterElementWrap(el)).toList();
 
-  List<ParameterElement> get requiredParameters => _requiredParams;
+  List<ParameterElementWrap> get requiredParameters => _requiredParams;
 
-  List<ParameterElement> get optionalParameters => _optionalParams;
+  List<ParameterElementWrap> get optionalParameters => _optionalParams;
 
   bool get areOptionalParamsPositional => _areOptionalParamsPositional;
 
-  ParameterElement findOptionalParamByName(String paramName) {
-    for (ParameterElement param in _optionalParams) {
+  ParameterElementWrap findOptionalParamByName(String paramName) {
+    for (ParameterElementWrap param in _optionalParams) {
       if (param.name == paramName) {
         return param;
       }

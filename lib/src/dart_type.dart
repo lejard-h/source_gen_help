@@ -1,35 +1,35 @@
 part of jaguar.generator.internal.element;
 
-class DartTypeWrap {
+class DartTypeWrap extends Object with NamedElement {
   final DartType _wrapped;
 
   DartTypeWrap(this._wrapped);
 
   bool get isVoid => _wrapped.isVoid;
 
-  bool get isDartAsyncFuture => _wrapped.isDartAsyncFuture;
+  bool get isAsync => _wrapped.isDartAsyncFuture;
 
   bool get isDynamic => _wrapped.isDynamic;
 
   bool get isObject => _wrapped.isObject;
 
-  bool get isInt => compare(kIntTypeName, kCoreLibraryName);
+  bool get isInt => compareNamedElement(NamedElement.kTypeInt);
 
-  bool get isDouble => compare(kDoubleTypeName, kCoreLibraryName);
+  bool get isDouble => compareNamedElement(NamedElement.kTypeDouble);
 
-  bool get isNum => compare(kNumTypeName, kCoreLibraryName);
+  bool get isNum => compareNamedElement(NamedElement.kTypeNum);
 
-  bool get isBool => compare(kBoolTypeName, kCoreLibraryName);
+  bool get isBool => compareNamedElement(NamedElement.kTypeBool);
 
-  bool get isString => compare(kStringTypeName, kCoreLibraryName);
+  bool get isString => compareNamedElement(NamedElement.kTypeString);
 
   bool get isBuiltin => isInt || isDouble || isNum || isBool || isString;
 
-  bool get isDateTime => compare(kDateTimeTypeName, kCoreLibraryName);
+  bool get isDateTime => compareNamedElement(NamedElement.kTypeDateTime);
 
-  bool get isList => compare(kListTypeName, kCoreLibraryName);
+  bool get isList => compareNamedElement(NamedElement.kTypeList);
 
-  bool get isMap => compare(kMapTypeName, kCoreLibraryName);
+  bool get isMap => compareNamedElement(NamedElement.kTypeMap);
 
   String get displayName => _wrapped.displayName;
 
@@ -52,26 +52,7 @@ class DartTypeWrap {
     return true;
   }
 
-  static const String kCoreLibraryName = 'dart.core';
-
-  static const String kIntTypeName = 'int';
-
-  static const String kDoubleTypeName = 'double';
-
-  static const String kNumTypeName = 'num';
-
-  static const String kBoolTypeName = 'bool';
-
-  static const String kStringTypeName = 'String';
-
-  static const String kDateTimeTypeName = 'DateTime';
-
-  static const String kListTypeName = 'List';
-
-  static const String kMapTypeName = 'Map';
-
-  bool compare(String aName, String aLibraryName) =>
-      aName == name && aLibraryName == libraryName;
+  bool isSubTypeOfNamedElement(NamedElement type) => clazz.isSubtypeOf(type);
 
   String toString() => _wrapped.toString();
 
@@ -81,4 +62,13 @@ class DartTypeWrap {
       new InterfaceTypeWrap(_wrapped as InterfaceType);
 
   List<DartTypeWrap> get typeArguments => interface.typeArguments;
+
+  DartTypeWrap get flattenFuture {
+    if (!isAsync) {
+      return this;
+    }
+
+    return new DartTypeWrap(
+        _wrapped.flattenFutures(_wrapped.element.context.typeSystem));
+  }
 }
