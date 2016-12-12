@@ -1,13 +1,13 @@
 name: source_gen_help
 description: Some helpers for source_gen
-version: 0.0.2
+version: 0.0.3
 authors:
 - Ravi Teja Gudapati <tejainece@gmail.com>
 - Kevin Segaud <segaud.kevin@gmail.com>
 homepage: http://jaguar-dart.github.io
 
 environment:
-  sdk: '>=1.0.0 <2.0.0'
+  sdk: ">=1.8.0 <2.0.0"
 
 dependencies:
   source_gen: "^0.5.1"
