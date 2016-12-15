@@ -29,6 +29,8 @@ class ParameterElementWrap {
       return value.toIntValue();
     } else if (_type.isDouble) {
       return value.toDoubleValue();
+    } else if (_type.isNum) {
+      return value.toDoubleValue();
     } else if (_type.isString) {
       return value.toStringValue();
     } else if (_type.isBool) {

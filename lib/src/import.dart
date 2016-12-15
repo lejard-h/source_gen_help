@@ -23,6 +23,10 @@ abstract class NamedElement {
   /// Library the element is in
   String get libraryName;
 
+  bool compareNamedElement(NamedElement other) {
+    return name == other.name && libraryName == other.libraryName;
+  }
+
   static const String kCoreLibraryName = 'dart.core';
 
   static const String kTypeNameInt = 'int';
@@ -64,10 +68,6 @@ abstract class NamedElement {
 
   static const NamedElement kTypeMap =
       const NamedElementImpl.Make(kTypeNameMap, kCoreLibraryName);
-
-  bool compareNamedElement(NamedElement other) {
-    return name == other.name && libraryName == other.libraryName;
-  }
 }
 
 /// An element that has a name and library
