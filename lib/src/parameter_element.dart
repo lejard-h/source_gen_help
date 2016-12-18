@@ -1,6 +1,6 @@
 part of jaguar.generator.internal.element;
 
-class ParameterElementWrap {
+class ParameterElementWrap implements WithMetadata {
   final ParameterElement _wrapped;
 
   ParameterElementWrap(this._wrapped) {
@@ -43,4 +43,8 @@ class ParameterElementWrap {
   String get name => _wrapped.name;
 
   String get sourceValue => _wrapped.toString();
+
+  List<AnnotationElementWrap> get metadata => _wrapped.metadata
+      .map((annot) => new AnnotationElementWrap(annot))
+      .toList();
 }
