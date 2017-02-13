@@ -13,4 +13,6 @@ class InterfaceTypeWrap extends Object with NamedElement {
       _wrapped.typeArguments.map((arg) => new DartTypeWrap(arg)).toList();
 
   List<TypeParameterElement> get typeParameters => _wrapped.typeParameters;
+
+  List<PropertyAccessorElement> get accessors => _wrapped.accessors;
 }
