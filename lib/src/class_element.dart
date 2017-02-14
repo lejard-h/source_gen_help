@@ -4,7 +4,9 @@ abstract class WithMetadata {
   List<AnnotationElementWrap> get metadata;
 }
 
-class ClassElementWrap extends Object with NamedElement implements WithMetadata {
+class ClassElementWrap extends Object
+    with NamedElement
+    implements WithMetadata {
   final ClassElement _wrapped;
 
   ClassElementWrap(this._wrapped);
@@ -13,8 +15,9 @@ class ClassElementWrap extends Object with NamedElement implements WithMetadata 
 
   String get libraryName => _wrapped.library.name;
 
-  List<InterfaceTypeWrap> get allSupertypes =>
-      _wrapped.allSupertypes.map((InterfaceType iface) => new InterfaceTypeWrap(iface)).toList();
+  List<InterfaceTypeWrap> get allSupertypes => _wrapped.allSupertypes
+      .map((InterfaceType iface) => new InterfaceTypeWrap(iface))
+      .toList();
 
   bool isSameAs(ClassElementWrap other) {
     return name == other.name && libraryName == other.libraryName;
@@ -24,23 +27,29 @@ class ClassElementWrap extends Object with NamedElement implements WithMetadata 
     return first.name == name && first.libraryName == libraryName;
   }
 
-  List<PropertyAccessorElement> get fields {
+  List<FieldElement> get fiels => _wrapped.fields;
+
+  List<PropertyAccessorElement> getAccessors({bool withSupertype: false}) {
     List<PropertyAccessorElement> access = new List.from(_wrapped.accessors);
-    for (InterfaceTypeWrap supertype in allSupertypes) {
-      if (supertype.name != "Object") {
-        access.addAll(supertype.accessors);
+    if (withSupertype == true) {
+      for (InterfaceTypeWrap supertype in allSupertypes) {
+        if (supertype.name != "Object") {
+          //fixme: better way to do this ?
+          access.addAll(supertype.accessors);
+        }
       }
     }
     return access;
   }
 
-  List<AnnotationElementWrap> get metadata =>
-      _wrapped.metadata.map((annot) => new AnnotationElementWrap(annot)).toList();
+  List<AnnotationElementWrap> get metadata => _wrapped.metadata
+      .map((annot) => new AnnotationElementWrap(annot))
+      .toList();
 
   List<TypeParameterElement> get typeParameters => _wrapped.typeParameters;
 
-  bool isSubtypeOf(NamedElement type) =>
-      allSupertypes.any((InterfaceTypeWrap inter) => inter.compareNamedElement(type));
+  bool isSubtypeOf(NamedElement type) => allSupertypes
+      .any((InterfaceTypeWrap inter) => inter.compareNamedElement(type));
 
   InterfaceTypeWrap getSubtypeOf(NamedElement named) {
     for (InterfaceTypeWrap interface in allSupertypes) {
@@ -52,9 +61,11 @@ class ClassElementWrap extends Object with NamedElement implements WithMetadata 
     return null;
   }
 
-  List<MethodElementWrap> get methods => _wrapped.methods.map((meth) => new MethodElementWrap(meth)).toList();
+  List<MethodElementWrap> get methods =>
+      _wrapped.methods.map((meth) => new MethodElementWrap(meth)).toList();
 
-  ConstructorElementWrap get unnamedConstructor => new ConstructorElementWrap(_wrapped.unnamedConstructor);
+  ConstructorElementWrap get unnamedConstructor =>
+      new ConstructorElementWrap(_wrapped.unnamedConstructor);
 
   ConstructorElementWrap getNamedConstructors(String name) {
     ConstructorElement el = _wrapped.getNamedConstructor(name);
