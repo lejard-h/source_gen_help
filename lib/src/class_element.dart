@@ -27,7 +27,7 @@ class ClassElementWrap extends Object
     return first.name == name && first.libraryName == libraryName;
   }
 
-  List<FieldElement> get fiels => _wrapped.fields;
+  List<FieldElement> get fields => _wrapped.fields;
 
   List<PropertyAccessorElement> getAccessors({bool withSupertype: false}) {
     List<PropertyAccessorElement> access = new List.from(_wrapped.accessors);
